@@ -5,7 +5,7 @@ networks:
 services:
   ping-bot:
     container_name: pingBot
-    image: pingbot
+    image: ping-bot
     build: ./bot
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
@@ -17,7 +17,7 @@ services:
     restart: always
   ping-script:
     container_name: pingScript
-    image: pingScript
+    image: ping-script
     build: ./routerping
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
