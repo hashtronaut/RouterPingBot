@@ -9,14 +9,14 @@ logger = logging.getLogger('RouterPingBot')
 
 admin_id = os.environ.get("ADMIN_ID")
 bot_token = os.environ.get("BOT_TOKEN")
-api_id = int(os.environ.get("API_ID"))
+api_id = os.environ.get("API_ID")
 api_hash = os.environ.get("API_HASH")
 
 
 # Telegram imports
 from telethon import TelegramClient, events
 
-bot = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
+bot = TelegramClient('bot', int(api_id), api_hash).start(bot_token=bot_token)
 
 #db imports
 from pymongo import MongoClient
