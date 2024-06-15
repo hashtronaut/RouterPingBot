@@ -19,8 +19,6 @@ services:
     container_name: pingScript
     image: pingScript
     build: ./RouterPing
-    volumes:
-      - ./config.json:/config.json
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
     networks:
