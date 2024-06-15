@@ -10,6 +10,8 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - ADMIN_ID=${ADMIN_ID}
+      - API_ID=${API_ID}
+      - API_HASH=${API_HASH}
     networks:
       - ping
     depends_on:
