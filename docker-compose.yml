@@ -1,0 +1,39 @@
+version: '3'
+networks:
+  ping:
+    name: ping
+services:
+  ping-bot:
+    container_name: pingBot
+    image: pingbot
+    build: ./Bot
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - ADMIN_ID=${ADMIN_ID}
+    networks:
+      - ping
+    depends_on:
+      - db
+    restart: always
+  ping-script:
+    container_name: pingScript
+    image: pingScript
+    build: ./RouterPing
+    volumes:
+      - ./config.json:/config.json
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+    networks:
+      - ping
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: mongo:4
+    container_name: mongoPing
+    volumes:
+      - ./mongo:/data/db
+    networks:
+      - ping
+    restart: always
+
