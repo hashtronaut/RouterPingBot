@@ -6,7 +6,7 @@ services:
   ping-bot:
     container_name: pingBot
     image: pingbot
-    build: ./Bot
+    build: ./bot
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - ADMIN_ID=${ADMIN_ID}
@@ -18,7 +18,7 @@ services:
   ping-script:
     container_name: pingScript
     image: pingScript
-    build: ./RouterPing
+    build: ./routerping
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
     networks:
