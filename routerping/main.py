@@ -24,7 +24,7 @@ url = f"https://api.telegram.org/bot{bot_token}/sendMessage?"
 def ping(host):
 	command = ['ping', '-c', '5', host]
 	with open('/dev/null', 'w') as devnull:
-	res = subprocess.call(command, stdout=devnull, stderr=devnull)
+		res = subprocess.call(command, stdout=devnull, stderr=devnull)
 	return res
 
 def send_message(url, chat_id, message, name, retries=3, delay=5):
