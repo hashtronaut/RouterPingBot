@@ -26,17 +26,17 @@ def ping(host):
 		return False
 
 def send_message(url, chat_id, message, name, retries=3, delay=5):
-	  for attempt in range(retries):
-        try:
-            response = requests.get(f"{url}chat_id={chat_id}&text={message}", timeout=5)
-            if response.status_code == 200:
-                return response
-            else:
-                logging.error(f"Failed to send message to {name}: {response.status_code}")
-        except requests.exceptions.ConnectionError as e:
-            logging.error(f"ConnectionError on attempt {attempt + 1}: {e}")
-            time.sleep(delay)
-    return None
+	for attempt in range(retries):
+		try:
+			response = requests.get(f"{url}chat_id={chat_id}&text={message}", timeout=5)
+			if response.status_code == 200:
+				return response
+			else:
+				logging.error(f"Failed to send message to {name}: {response.status_code}")
+		except requests.exceptions.ConnectionError as e:
+			logging.error(f"ConnectionError on attempt {attempt + 1}: {e}")
+			time.sleep(delay)
+	return None
 
 def main():
 	while True:
