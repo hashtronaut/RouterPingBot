@@ -63,7 +63,7 @@ def main():
 							minutes = int((dif % 3600) // 60)
 							if hours > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {hours} hours and {minutes} minutes"
-							else if minutes > 0:
+							elif minutes > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {minutes} minutes"
 							else:
 								continue
