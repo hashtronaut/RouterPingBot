@@ -19,7 +19,8 @@ url = f"https://api.telegram.org/bot{bot_token}/sendMessage?"
 
 def ping(host):
 	command = ['ping', '-c', '5', host]
-	res = subprocess.call(command, stdout="/dev/null")
+	with open('/dev/null', 'w') as devnull:
+		res = subprocess.call(command, stdout=devnull, stderr=devnull)
 	if res == 0:
 		return True
 	else:
