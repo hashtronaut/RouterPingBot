@@ -60,10 +60,10 @@ async def start_handle(event):
 async def handle_forwarded_message(event):
 	if event.is_private and event.chat_id == admin_id:
 		clients = users.find({"user_id": {"$exists": True}}, {'_id': 0})
-		msg = "Ім'я      ID   IP\n\n"
+		msg = "Ім'я      ID   IP    Status\n\n"
 		counter = 0
 		for i in clients:
-			msg += f'{i["name"]}  <code>{int(i["user_id"])}</code>   {i["ip"]}\n'
+			msg += f'{i["name"]}  <code>{int(i["user_id"])}</code>   {i["ip"]}    {i["flag"]}\n'
 			counter += 1
 		if counter > 0:
 			await event.reply(msg, parse_mode='HTML')
