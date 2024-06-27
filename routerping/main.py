@@ -82,6 +82,7 @@ def main():
 						continue
 					#if user had not electricity and now has
 					else:
+						message = "Darkness has come 🌚"
 						today = int(datetime.now().timestamp())
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "off", "datetime": today}})
 						print(f"{client['name']} is off at {today}")
