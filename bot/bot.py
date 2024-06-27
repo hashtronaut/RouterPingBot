@@ -7,14 +7,11 @@ import logging
 
 logger = logging.getLogger('RouterPingBot')
 
-#admin_id = os.environ.get("ADMIN_ID")
-#bot_token = os.environ.get("BOT_TOKEN")
-#api_id = os.environ.get("API_ID")
-#api_hash = os.environ.get("API_HASH")
-api_id = 26675983
-api_hash = 'c30bf401c9e214da92bec2ed42013c92'
-bot_token = '5624860414:AAE1ucatDznmF91s1ifMUB888RTPUO6XF0k'
-admin_id = '73223290'
+admin_id = os.environ.get("ADMIN_ID")
+bot_token = os.environ.get("BOT_TOKEN")
+api_id = os.environ.get("API_ID")
+api_hash = os.environ.get("API_HASH")
+
 
 # Telegram imports
 from telethon import TelegramClient, events
