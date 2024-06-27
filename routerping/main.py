@@ -18,7 +18,7 @@ url = f"https://api.telegram.org/bot{bot_token}/sendMessage?"
 
 def ping(host):
 	command = ['ping', '-c', '5', host]
-	res = subprocess.call(command)
+	res = subprocess.call(command, stdout="/dev/null")
 	if res == 0:
 		return True
 	else:
@@ -42,6 +42,8 @@ def main():
 						if "datetime" in client:
 							#calculating for how long user didn't have the el
 							now = int(datetime.now().timestamp())
+							print(f"now it's {now}")
+							print(f"{client['name']}: {client['datetime']}")
 							dif = abs(now - client["datetime"])
 							hours = int(dif // 3600)
 							minutes = int((dif % 3600) // 60)
@@ -54,6 +56,7 @@ def main():
 							except requests.exceptions.ConnectionError:
 								continue
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
+						print(f"dif: {dif}, hours: {hours}, minutes: {minutes}")
 				#ping not succeeded
 				else:
 					#if user had not electricity and now has not
@@ -63,6 +66,7 @@ def main():
 					else:
 						today = int(datetime.now().timestamp())
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "off", "datetime": today}})
+						print(f"{client['name']} is off at {today}")
 						try:
 							result = requests.get(url+f"chat_id={client['user_id']}&text=Darkness has come 🌚", timeout=5)
 						except requests.exceptions.ConnectionError:
