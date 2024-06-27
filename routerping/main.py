@@ -2,6 +2,7 @@ import subprocess  # For executing a shell command
 import time
 import os
 import requests
+import logging
 from datetime import datetime
 from pytz import timezone
 
@@ -23,6 +24,19 @@ def ping(host):
 		return True
 	else:
 		return False
+
+def send_message(url, chat_id, message, name, retries=3, delay=5):
+	  for attempt in range(retries):
+        try:
+            response = requests.get(f"{url}chat_id={chat_id}&text={message}", timeout=5)
+            if response.status_code == 200:
+                return response
+            else:
+                logging.error(f"Failed to send message to {name}: {response.status_code}")
+        except requests.exceptions.ConnectionError as e:
+            logging.error(f"ConnectionError on attempt {attempt + 1}: {e}")
+            time.sleep(delay)
+    return None
 
 def main():
 	while True:
@@ -49,12 +63,15 @@ def main():
 							minutes = int((dif % 3600) // 60)
 							if hours > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {hours} hours and {minutes} minutes"
-							else:
+							else if minutes > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {minutes} minutes"
-							try:
-								result = requests.get(url+f"chat_id={client['user_id']}&text={message}", timeout=5)
-							except requests.exceptions.ConnectionError:
+							else:
 								continue
+							
+							result = send_message(url, client['user_id'], message, name=client['name'])
+							if result is None:
+								logging.error("Failed to send message after multiple attempts")
+
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
 						print(f"dif: {dif}, hours: {hours}, minutes: {minutes}")
 				#ping not succeeded
@@ -67,9 +84,8 @@ def main():
 						today = int(datetime.now().timestamp())
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "off", "datetime": today}})
 						print(f"{client['name']} is off at {today}")
-						try:
-							result = requests.get(url+f"chat_id={client['user_id']}&text=Darkness has come 🌚", timeout=5)
-						except requests.exceptions.ConnectionError:
-							continue
+						result = send_message(url, client['user_id'], message, name=client['name'])
+						if result is None:
+							logging.error("Failed to send message after multiple attempts")
 if __name__=='__main__':
 	main()
