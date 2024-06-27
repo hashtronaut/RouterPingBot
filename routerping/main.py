@@ -23,8 +23,8 @@ url = f"https://api.telegram.org/bot{bot_token}/sendMessage?"
 
 def ping(host):
 	command = ['ping', '-c', '5', host]
-	#with open('/dev/null', 'w') as devnull:
-	res = subprocess.call(command)#, stdout=devnull, stderr=devnull)
+	with open('/dev/null', 'w') as devnull:
+	res = subprocess.call(command, stdout=devnull, stderr=devnull)
 	return res
 
 def send_message(url, chat_id, message, name, retries=3, delay=5):
@@ -53,7 +53,7 @@ def main():
 					#if user had electricity and now has
 					if client["flag"] == "on":
 						continue
-					#if user had no electricity but now has
+					#if user had not electricity but now has
 					else:
 						if "datetime" in client:
 							#calculating for how long user didn't have the el
@@ -63,15 +63,14 @@ def main():
 							dif = abs(now - client["datetime"])
 							hours = int(dif // 3600)
 							minutes = int((dif % 3600) // 60)
-							#update db
-							users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
+							
 							if hours > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {hours} hours and {minutes} minutes"
 							elif minutes > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {minutes} minutes"
-							else:
-								continue
 
+							#update db
+							users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
 							result = send_message(url, client['user_id'], message, name=client['name'])
 							if result is None:
 								logger.error("Failed to send message after multiple attempts")
@@ -82,7 +81,7 @@ def main():
 					#if user had not electricity and now has not
 					if client["flag"] == "off":
 						continue
-					#if user had not electricity and now has
+					#if user had electricity and now has not
 					else:
 						message = "Darkness has come 🌚"
 						today = int(datetime.now().timestamp())
