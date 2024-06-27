@@ -25,10 +25,7 @@ def ping(host):
 	command = ['ping', '-c', '5', host]
 	with open('/dev/null', 'w') as devnull:
 		res = subprocess.call(command, stdout=devnull, stderr=devnull)
-	if res == 0:
-		return True
-	else:
-		return False
+	return res
 
 def send_message(url, chat_id, message, name, retries=3, delay=5):
 	for attempt in range(retries):
@@ -52,7 +49,7 @@ def main():
 			else:
 				res = ping(client["ip"])
 				#ping succeeded
-				if res == True:
+				if res == 0:
 					#if user had electricity and now has
 					if client["flag"] == "on":
 						continue
@@ -80,7 +77,7 @@ def main():
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
 						logger.error(f"dif: {dif}, hours: {hours}, minutes: {minutes}")
 				#ping not succeeded
-				else:
+				elif res == 1:
 					#if user had not electricity and now has not
 					if client["flag"] == "off":
 						continue
@@ -93,5 +90,8 @@ def main():
 						result = send_message(url, client['user_id'], message, name=client['name'])
 						if result is None:
 							logger.error("Failed to send message after multiple attempts")
+				else:
+					logger.error(f'Ping failed for {client["name"]} with code {res}')
+
 if __name__=='__main__':
 	main()
