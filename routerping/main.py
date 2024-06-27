@@ -6,6 +6,10 @@ import logging
 from datetime import datetime
 from pytz import timezone
 
+
+logger = logging.getLogger('RouterBot')
+
+
 from pymongo import MongoClient
 client = MongoClient("localhost", 27017)
 db = client["Router"]
@@ -33,9 +37,9 @@ def send_message(url, chat_id, message, name, retries=3, delay=5):
 			if response.status_code == 200:
 				return response
 			else:
-				logging.error(f"Failed to send message to {name}: {response.status_code}")
+				logger.error(f"Failed to send message to {name}: {response.status_code}")
 		except requests.exceptions.ConnectionError as e:
-			logging.error(f"ConnectionError on attempt {attempt + 1}: {e}")
+			logger.error(f"ConnectionError on attempt {attempt + 1}: {e}")
 			time.sleep(delay)
 	return None
 
@@ -57,8 +61,8 @@ def main():
 						if "datetime" in client:
 							#calculating for how long user didn't have the el
 							now = int(datetime.now().timestamp())
-							print(f"now it's {now}")
-							print(f"{client['name']}: {client['datetime']}")
+							logger.error(f"now it's {now}")
+							logger.error(f"{client['name']}: {client['datetime']}")
 							dif = abs(now - client["datetime"])
 							hours = int(dif // 3600)
 							minutes = int((dif % 3600) // 60)
@@ -71,10 +75,10 @@ def main():
 							
 							result = send_message(url, client['user_id'], message, name=client['name'])
 							if result is None:
-								logging.error("Failed to send message after multiple attempts")
+								logger.error("Failed to send message after multiple attempts")
 
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
-						print(f"dif: {dif}, hours: {hours}, minutes: {minutes}")
+						logger.error(f"dif: {dif}, hours: {hours}, minutes: {minutes}")
 				#ping not succeeded
 				else:
 					#if user had not electricity and now has not
@@ -85,9 +89,9 @@ def main():
 						message = "Darkness has come 🌚"
 						today = int(datetime.now().timestamp())
 						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "off", "datetime": today}})
-						print(f"{client['name']} is off at {today}")
+						logger.error(f"{client['name']} is off at {today}")
 						result = send_message(url, client['user_id'], message, name=client['name'])
 						if result is None:
-							logging.error("Failed to send message after multiple attempts")
+							logger.error("Failed to send message after multiple attempts")
 if __name__=='__main__':
 	main()
