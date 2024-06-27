@@ -63,19 +63,20 @@ def main():
 							dif = abs(now - client["datetime"])
 							hours = int(dif // 3600)
 							minutes = int((dif % 3600) // 60)
+							#update db
+							users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
 							if hours > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {hours} hours and {minutes} minutes"
 							elif minutes > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {minutes} minutes"
 							else:
 								continue
-							
+
 							result = send_message(url, client['user_id'], message, name=client['name'])
 							if result is None:
 								logger.error("Failed to send message after multiple attempts")
-
-						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
 						logger.error(f"dif: {dif}, hours: {hours}, minutes: {minutes}")
+
 				#ping not succeeded
 				elif res == 1:
 					#if user had not electricity and now has not
