@@ -76,15 +76,15 @@ async def handle_forwarded_message(event):
 		msg = event.text.split(' ')
 		if len(msg) > 1:
 			user_id = msg[1]
-		try:
-			user_id = int(user_id)
-			res = users.update_one({"user_id": user_id}, {"$set":{"flag": "pause"}})
-			if res.modified_count == 1:
-				await event.reply("User was set on pause")
-			else:
-				await event.reply("User does not exist")
-		except ValueError:
-			await event.reply("ID must be an integer")
+			try:
+				user_id = int(user_id)
+				res = users.update_one({"user_id": user_id}, {"$set":{"flag": "pause"}})
+				if res.modified_count == 1:
+					await event.reply("User was set on pause")
+				else:
+					await event.reply("User does not exist")
+			except ValueError:
+				await event.reply("ID must be an integer")
 
 
 
