@@ -63,10 +63,10 @@ def main():
 							dif = abs(now - client["datetime"])
 							hours = int(dif // 3600)
 							minutes = int((dif % 3600) // 60)
-							
+							#seconds = int(dif % 60)
 							if hours > 0:
 								message = f"Guess who's back🌝\nElectricity was gone for {hours} hours and {minutes} minutes"
-							elif minutes > 0:
+							else:
 								message = f"Guess who's back🌝\nElectricity was gone for {minutes} minutes"
 
 							#update db
