@@ -96,7 +96,7 @@ async def handle_forwarded_message(event):
 			user_id = msg[1]
 		try:
 			user_id = int(user_id)
-			res = users.update_one({"user_id": user_id}, {"$set":{"flag": ""}})
+			res = users.update_one({"user_id": user_id}, {"$set":{"flag": "on"}})
 			if res.modified_count == 1:
 				await event.reply("User was unpaused")
 			else:
