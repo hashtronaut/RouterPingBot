@@ -70,7 +70,7 @@ def main():
 								message = f"Guess who's back🌝\nElectricity was gone for {minutes} minutes"
 
 							#update db
-							users.update_one({"ip": client["ip"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
+							users.update_one({"user_id": client["user_id"]}, {"$set": {"flag": "on"}, "$unset": {"datetime": ""}})
 							result = send_message(url, client['user_id'], message, name=client['name'])
 							if result is None:
 								logger.error("Failed to send message after multiple attempts")
