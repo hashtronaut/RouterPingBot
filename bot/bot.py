@@ -45,15 +45,16 @@ async def start_handle(event):
 	if event.is_private and event.chat_id == admin_id:
 		print("entered")
 		info = event.text.split(' ')
-		name = info[1]
-		ip = info[2]
-		res = check_ip(ip)
-		if res is False:
-			await bot.send_message(event.chat_id, "IP is invalid")
-		string = string_generator()
-		users.insert_one({'link': string, "name": name, "ip": ip})
-		link = f'https://t.me/electronyukh_bot?start={string}' 
-		await bot.send_message(event.chat_id, link)
+		if len(info) > 2:
+			name = info[1]
+			ip = info[2]
+			res = check_ip(ip)
+			if res is False:
+				await bot.send_message(event.chat_id, "IP is invalid")
+			string = string_generator()
+			users.insert_one({'link': string, "name": name, "ip": ip})
+			link = f'https://t.me/electronyukh_bot?start={string}' 
+			await bot.send_message(event.chat_id, link)
 
 
 @bot.on(events.NewMessage(pattern='/list'))
@@ -94,15 +95,15 @@ async def handle_forwarded_message(event):
 		msg = event.text.split(' ')
 		if len(msg) > 1:
 			user_id = msg[1]
-		try:
-			user_id = int(user_id)
-			res = users.update_one({"user_id": user_id}, {"$set":{"flag": "on"}})
-			if res.modified_count == 1:
-				await event.reply("User was unpaused")
-			else:
-				await event.reply("User does not exist")
-		except ValueError:
-			await event.reply("ID must be an integer")
+			try:
+				user_id = int(user_id)
+				res = users.update_one({"user_id": user_id}, {"$set":{"flag": "on"}})
+				if res.modified_count == 1:
+					await event.reply("User was unpaused")
+				else:
+					await event.reply("User does not exist")
+			except ValueError:
+				await event.reply("ID must be an integer")
 
 
 @bot.on(events.NewMessage(pattern='/del'))
@@ -111,15 +112,15 @@ async def handle_forwarded_message(event):
 		msg = event.text.split(' ')
 		if len(msg) > 1:
 			user_id = msg[1]
-		try:
-			user_id = int(user_id)
-			res = users.delete_one({"user_id": user_id})
-			if res.deleted_count == 1:
-				await event.reply("You successfuly deleted user")
-			else:
-				await event.reply("User has been deleted or doesn't exist")
-		except ValueError:
-			await event.reply("ID must be an integer")
+			try:
+				user_id = int(user_id)
+				res = users.delete_one({"user_id": user_id})
+				if res.deleted_count == 1:
+					await event.reply("You successfuly deleted user")
+				else:
+					await event.reply("User has been deleted or doesn't exist")
+			except ValueError:
+				await event.reply("ID must be an integer")
 
 
 
