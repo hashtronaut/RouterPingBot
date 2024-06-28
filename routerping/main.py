@@ -85,7 +85,7 @@ def main():
 					else:
 						message = "Darkness has come 🌚"
 						today = int(datetime.now().timestamp())
-						users.update_one({"ip": client["ip"]}, {"$set": {"flag": "off", "datetime": today}})
+						users.update_one({"user_id": client["user_id"]}, {"$set": {"flag": "off", "datetime": today}})
 						logger.error(f"{client['name']} is off at {today}")
 						result = send_message(url, client['user_id'], message, name=client['name'])
 						if result is None:
